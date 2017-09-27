@@ -47,6 +47,10 @@ if (!message.content.startsWith(prefix)) return;
  if (message.content.startsWith(prefix + "points")) {
 	 message.reply(`You currently have ${userData.points} points.`);
  }
+ 
+ fs.writeFile("./points.json", JSON.stringify(points), (err) => {
+    if (err) console.error(err)
+  }); 
 });
 
 client.login(config.token);
