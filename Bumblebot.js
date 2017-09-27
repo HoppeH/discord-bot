@@ -31,7 +31,7 @@ client.on("message", message => {
   };
   let userData = points[message.author.id];
   userData.points++;
-
+  
   let curLevel = Math.floor(0.1 * Math.sqrt(userData.points));
   if (curLevel > userData.level) {
     // Level up!
@@ -50,8 +50,8 @@ if (!message.content.startsWith(prefix)) return;
  
  fs.writeFile("./points.json", JSON.stringify(points), (err) => {
     if (err) console.error(err)
-  }); 
+  });
 });
 
-client.login(config.token);
 
+client.login(config.token);
