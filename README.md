@@ -1,3 +1,5 @@
 # discord-bot
 
-#Beskrivelse kommer
+#Start prodjektet
+
+- npm start - Starter programmet
