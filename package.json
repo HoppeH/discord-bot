@@ -1,0 +1,28 @@
+{
+  "name": "discord-bot",
+  "version": "0.0.1",
+  "description": "Aleks sin Discordbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoppeH/discord-bot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot"
+  ],
+  "author": "Aleksander",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoppeH/discord-bot/issues"
+  },
+  "homepage": "https://github.com/HoppeH/discord-bot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "pubg-api-redis": "^3.6.0"
+  }
+}
