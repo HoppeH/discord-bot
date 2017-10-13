@@ -21,7 +21,7 @@ client.on("message", message => {
 
 	 if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
-   ping.test(client, message, args);
+   ping.pingResponse(message);
 
   //  // La til .catch for å fange evt feil
   // if (message.content.startsWith(config.prefix + "ping")) {
@@ -54,7 +54,7 @@ if (message.content.startsWith(config.prefix + 'setstatus')){
 
   let curLevel = Math.floor(0.1 * Math.sqrt(userData.points));
 
-  console.log('Points of user: ', curLevel);
+  // console.log('Points of user: ', curLevel);
 
   // La til .catch for å fange evt feil
   if (curLevel > userData.level) {
@@ -76,7 +76,7 @@ if (message.content.startsWith(config.prefix + 'setstatus')){
  }
 
 // sjekke innhold i points etter det er endret
-console.log('Points end: ', points);
+// console.log('Points end: ', points);
 
 fs.writeFile("./points.json", JSON.stringify(points), (err) => {
   if (err) console.error(err)
