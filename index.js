@@ -5,6 +5,7 @@ const config = require("./config.json");
 const prefix = "!";
 const warn = require("./commands/warn.js");
 
+const ping =  require ("./commands/ping.js");
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -20,12 +21,13 @@ client.on("message", message => {
 
 	 if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
-   // La til .catch for å fange evt feil
-  if (message.content.startsWith(config.prefix + "ping")) {
-    message.channel.send(`Pong! \`${Date.now() - message.createdTimestamp} ms`);
-    //.catch(err => console.log(err));
+   ping.test(client, message, args);
 
-  } else
+  //  // La til .catch for å fange evt feil
+  // if (message.content.startsWith(config.prefix + "ping")) {
+  //   message.channel.send(`Pong! \`${Date.now() - message.createdTimestamp} ms`);
+  //   //.catch(err => console.log(err));
+
 
   if (message.content.startsWith(config.prefix + 'setgame')){
     client.user.setGame(argresult);
