@@ -3,6 +3,8 @@ const fs = require("fs");
 const client = new Discord.Client();
 const config = require("./config.json");
 const prefix = "!";
+
+
 const warn = require ("./commands/warn.js");
 const setgame = require ("./commands/setgamesetstatus.js");
 const ping =  require ("./commands/ping.js");
@@ -17,7 +19,7 @@ client.on('ready', () => {
 // Sjekker innhold i points før det er endret
 // console.log('Points start: ', points);
 
-//client.on("message", message => {
+client.on("message", message => {
   //let args = message.content.split(' ').slice(1);
   //var argresult = args.join(' ');
 
@@ -27,8 +29,8 @@ client.on('ready', () => {
 
    setgame.setgameresponse(client , message);
 
-   setlevel.setlevelresponse(client , message);
-   
+   let points = setlevel.setlevelresponse(client , message);
+
    setguild.guildevents(client , message);
 
 //  if (!points[message.author.id]) points[message.author.id] = {
@@ -85,6 +87,7 @@ fs.writeFile("./points.json", JSON.stringify(points), (err) => {
 
 
 
+});
 });
 // La til .catch for å fange evt feil
 client.login(config.token);
