@@ -4,7 +4,7 @@ const client = new Discord.Client();
 const config = require("./config.json");
 const prefix = "!";
 const warn = require("./commands/warn.js");
-
+const setgame = require("./commands/setgamesetstatus.js");
 const ping =  require ("./commands/ping.js");
 
 client.on('ready', () => {
@@ -16,32 +16,14 @@ let points = JSON.parse(fs.readFileSync("./points.json", "utf8"));
 // console.log('Points start: ', points);
 
 client.on("message", message => {
-  let args = message.content.split(' ').slice(1);
-  var argresult = args.join(' ');
+  //let args = message.content.split(' ').slice(1);
+  //var argresult = args.join(' ');
 
 	 if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
    ping.pingResponse(message);
 
-  //  // La til .catch for å fange evt feil
-  // if (message.content.startsWith(config.prefix + "ping")) {
-  //   message.channel.send(`Pong! \`${Date.now() - message.createdTimestamp} ms`);
-  //   //.catch(err => console.log(err));
-
-
-  if (message.content.startsWith(config.prefix + 'setgame')){
-    client.user.setGame(argresult);
-
-} else
-
-if (message.content.startsWith(config.prefix + 'setstatus')){
-  client.user.setStatus(argresult);
-
-} else
-
-  if (message.content.startsWith(config.prefix + 'send')) {
-    client.channels.get('366305336438685706').send('Hallaise folkens');
-  } else
+   setgame.setgameresponse(client , message);
 
   if (!points[message.author.id]) points[message.author.id] = {
     points: 0,
@@ -60,18 +42,18 @@ if (message.content.startsWith(config.prefix + 'setstatus')){
   if (curLevel > userData.level) {
     // Level up!
     userData.level = curLevel;
-    message.reply(`You"ve leveled up to level **${curLevel}**! Ain"t that dandy?`)
+    message.reply(`Du e level **${curLevel}**!`)
     //.catch(err => console.log(err));
   }
 // La til .catch for å fange evt feil
   if (message.content.startsWith(prefix + "level")) {
-    message.reply(`You are currently level ${userData.level}, with ${userData.points} points.`)
+    message.reply(`Du e level ${userData.level}, med ${userData.points} poeng.`)
     //.catch(err => console.log(err));
   }
 
   // La til .catch for å fange evt feil
  if (message.content.startsWith(prefix + "points")) {
-	 message.reply(`You currently have ${userData.points} points.`)
+	 message.reply(`Du har ${userData.points} poeng.`)
   // .catch(err => console.log(err));
  }
 
