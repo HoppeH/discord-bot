@@ -1,12 +1,12 @@
 const config = require('./../config.json');
 const axios = require('axios');
 const Discord = require('discord.js');
+
 exports.apexResponse = function(message) {
-  //     if (message.content.startsWith(config.prefix + "ping")) {
-  //     message.channel.send(`Pong! \`${Date.now() - message.createdTimestamp} ms`);
-  //   }
+  const username = '';
   const apiUrl = 'https://public-api.tracker.gg/apex/v1/standard/profile/5/';
-  if (message.content.startsWith(config.prefix + 'apex')) {
+
+  if (message.content.toLowerCase().startsWith(config.prefix + 'apex')) {
     let args = message.content.split(' ').slice(1);
     if (!args[0]) return message.channel.send('Mangler navn');
 
@@ -18,17 +18,17 @@ exports.apexResponse = function(message) {
       })
       .then(function(response) {
         let level = response.data.data.metadata.level;
-        let username = response.data.data.metadata.platformUserHandle;
+        username = response.data.data.metadata.platformUserHandle;
         let icon = response.data.data.children[0].metadata.icon;
         let legend = response.data.data.children[0].metadata.legend_name;
         let stats = response.data.data.stats;
-        console.log(stats[3]);
+        // console.log(stats[3]);
         const embed = new Discord.RichEmbed()
 
           .setTitle('Apex Legends!')
           .setDescription('Info for ' + username)
-          .setImage('https://i.imgur.com/xxxxxxxx.png')
-          .setURL('https://google.com')
+          //   .setImage('https://i.imgur.com/xxxxxxxx.png')
+          //   .setURL('https://google.com')
           .addField('Legend: ', legend)
 
           //Nope
@@ -66,7 +66,16 @@ exports.apexResponse = function(message) {
         // message.channel.send('Nivå: ' + response.data.metadata.level);
       })
       .catch(function(error) {
-        console.log(error);
+        console.log(error.response.status);
+        if (error.response.status === 404)
+          return message.channel.send(
+            'Huffda! Jeg klarer ikke å finne stats om ``' + args[0] + '``'
+          );
+
+        if (error)
+          message.channel.send(
+            'Auda! Noe har gått galt! ' + error.response.statusText
+          );
       });
     console.log(args);
   }
