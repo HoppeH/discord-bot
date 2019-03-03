@@ -6,7 +6,7 @@ exports.setgameresponse =  function (client , message) {
   var argresult = args.join(' ');
 
 if (message.content.startsWith(config.prefix + 'setgame')){
-  client.user.setGame(argresult);
+  client.user.setActivity(argresult);
 
 } else
 

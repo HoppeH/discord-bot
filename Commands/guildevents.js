@@ -1,9 +1,9 @@
-const config = require("./../config.json");
-
 exports.guildevents = (client, message) => {
   //guild
   client.on('guildMemberAdd', member => {
+    console.log('guildMemberAdd');
     let guild = member.guild
+
     guild.defaultChannel.send('Velkommen ${member.user.username} Te servern');
   });
 

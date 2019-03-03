@@ -3,7 +3,6 @@ const axios = require('axios');
 const Discord = require('discord.js');
 
 exports.apexResponse = function(message) {
-  const username = '';
   const apiUrl = 'https://public-api.tracker.gg/apex/v1/standard/profile/5/';
 
   if (message.content.toLowerCase().startsWith(config.prefix + 'apex')) {
@@ -18,7 +17,7 @@ exports.apexResponse = function(message) {
       })
       .then(function(response) {
         let level = response.data.data.metadata.level;
-        username = response.data.data.metadata.platformUserHandle;
+        let username = response.data.data.metadata.platformUserHandle;
         let icon = response.data.data.children[0].metadata.icon;
         let legend = response.data.data.children[0].metadata.legend_name;
         let stats = response.data.data.stats;
@@ -62,21 +61,21 @@ exports.apexResponse = function(message) {
          * Blank field, useful to create some space.
          */
 
-        message.channel.send(embed);
+        return message.channel.send(embed);
         // message.channel.send('Nivå: ' + response.data.metadata.level);
       })
       .catch(function(error) {
-        console.log(error.response.status);
-        if (error.response.status === 404)
+        if (error.response) {
           return message.channel.send(
             'Huffda! Jeg klarer ikke å finne stats om ``' + args[0] + '``'
           );
-
-        if (error)
+        } else if (error.request) {
           message.channel.send(
             'Auda! Noe har gått galt! ' + error.response.statusText
           );
+        } else {
+          console.log(error);
+        }
       });
-    console.log(args);
   }
 };
