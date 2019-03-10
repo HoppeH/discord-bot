@@ -1,14 +1,14 @@
 const  config = require("./../config.json");
 const fs = require("fs");
 const prefix = "!";
+const Discord = require('discord.js');
+// const client = require('../index.js');
 
-const client = require('../index.js');
+// const Enmap = require("enmap");
+// client.points = new Enmap({name: "points"});
 
-const Enmap = require("enmap");
-client.points = new Enmap({name: "points"});
-
-exports.levelresponse = function(message) {
-
+exports.levelresponse = function(client , message) {
+  // console.log(client.points);
   if (message.guild) {
     // We'll use the key often enough that simplifying it is worth the trouble.
     const key = `${message.guild.id}-${message.author.id}`;
@@ -54,11 +54,12 @@ exports.levelresponse = function(message) {
       const filtered = client.points.array().filter( p => p.guild === message.guild.id );
   
       // Sort it to get the top results... well... at the top. Y'know.
-      const sorted = filtered.sort((a, b) => a.points < b.points);
+      const sorted = filtered.sort((a, b) => b.points - a.points);
   
       // Slice it, dice it, get the top 10 of it!
       const top10 = sorted.splice(0, 10);
   
+      
       // Now shake it and show it! (as a nice embed, too!)
       const embed = new Discord.RichEmbed()
         .setTitle("Leaderboard")
@@ -70,10 +71,10 @@ exports.levelresponse = function(message) {
       }
       return message.channel.send({embed});
     }
-  
+    // console.log(message.guild.ownerID);
     if(command === "give") {
       // Limited to guild owner - adjust to your own preference!
-      if(!message.author.id === message.guild.owner) return message.reply("You're not the boss of me, you can't do that!");
+      if(message.author.id !== message.guild.ownerID) return message.reply("You're not the boss of me, you can't do that!");
   
       const user = message.mentions.users.first() || client.users.get(args[0]);
       if(!user) return message.reply("You must mention someone or give their ID!");
