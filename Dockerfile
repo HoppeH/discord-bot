@@ -13,6 +13,9 @@ RUN npm install --quiet node-gyp -g
 
 # Install nodemon globally in the container
 RUN npm i -g nodemon
+
+RUN npm i better-sqlite-pool
+RUN npm i enmap
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
