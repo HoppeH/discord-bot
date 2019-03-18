@@ -7,7 +7,7 @@ const prefix = '!';
 const warn = require('./commands/warn.js');
 const setgame = require('./commands/setgamesetstatus.js');
 const ping = require('./commands/ping.js');
-const apex = require('./commands/apex.js');
+const apex = require('./commands/apex/index.js');
 const level = require('./commands/level.js');
 // const setguild = require ("./commands/guildevents.js");
 
@@ -27,6 +27,7 @@ client.on('message', message => {
   //var argresult = args.join(' ');
 
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
+
   apex.apexResponse(message);
   ping.pingResponse(message);
   level.levelresponse(client, message);
