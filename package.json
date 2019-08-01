@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "nodemon ./src/index.js --ignore points.json -L"
+    "start": "nodemon ./src/index.js --ignore points.json -L",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,8 @@
     "better-sqlite-pool": "^0.2.0",
     "discord.js": "^11.4.2",
     "enmap": "^4.8.1",
-    "pubg-api-redis": "^3.6.0"
-  }
+    "pubg-api-redis": "^3.6.0",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
