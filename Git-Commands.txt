@@ -1,0 +1,10 @@
+
+For å legge til nye endringer
+git add -A
+git commit -m "Skriv litt om endringen"
+git push
+
+
+
+For å hente de siste endringene før du begynner å kode skriv
+git pull 

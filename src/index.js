@@ -26,11 +26,12 @@ client.on('message', message => {
   //let args = message.content.split(' ').slice(1);
   //var argresult = args.join(' ');
 
+  level.levelresponse(client, message);
+
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
   apex.apexResponse(message);
   ping.pingResponse(message);
-  level.levelresponse(client, message);
   setgame.setgameresponse(client, message);
 
   // setguild.guildevents(client , message);

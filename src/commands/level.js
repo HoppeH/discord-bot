@@ -30,7 +30,7 @@ exports.levelresponse = function(client , message) {
 
     // Act upon level up by sending a message and updating the user's level in enmap.
     if (client.points.get(key, "level") < curLevel) {
-      message.reply(`You've leveled up to level **${curLevel}**! Ain't that dandy?`);
+      message.reply(`Du levla opp te level **${curLevel}**! Va ikje det flott ?`);
       client.points.set(key, curLevel, "level");
     }
   }
@@ -46,7 +46,7 @@ exports.levelresponse = function(client , message) {
   
     if (command === "points") {
       const key = `${message.guild.id}-${message.author.id}`;
-      return message.channel.send(`You currently have ${client.points.get(key, "points")} points, and are level ${client.points.get(key, "level")}!`);
+      return message.channel.send(`Du har ${client.points.get(key, "points")} poeng, å e level ${client.points.get(key, "level")}!`);
     }
   
     if(command === "leaderboard") {
@@ -64,7 +64,7 @@ exports.levelresponse = function(client , message) {
       const embed = new Discord.RichEmbed()
         .setTitle("Leaderboard")
         .setAuthor(client.user.username, client.user.avatarURL)
-        .setDescription("Our top 10 points leaders!")
+        .setDescription("Top 10 brukera!")
         .setColor(0x00AE86);
       for(const data of top10) {
         embed.addField(client.users.get(data.user).tag, `${data.points} points (level ${data.level})`);
@@ -74,13 +74,13 @@ exports.levelresponse = function(client , message) {
     // console.log(message.guild.ownerID);
     if(command === "give") {
       // Limited to guild owner - adjust to your own preference!
-      if(message.author.id !== message.guild.ownerID) return message.reply("You're not the boss of me, you can't do that!");
+      if(message.author.id !== message.guild.ownerID) return message.reply("Du e ikje sjæf,du kan ikje gjøre sånn!");
   
       const user = message.mentions.users.first() || client.users.get(args[0]);
-      if(!user) return message.reply("You must mention someone or give their ID!");
+      if(!user) return message.reply("Æ må vette kem æ ska gje poeng (Klient ID takk)!");
   
       const pointsToAdd = parseInt(args[1], 10);
-      if(!pointsToAdd) return message.reply("You didn't tell me how many points to give...");
+      if(!pointsToAdd) return message.reply("Du sa ikje kor mange poeng æ sku gje...");
   
       const key = `${message.guild.id}-${user.id}`;
   
@@ -96,7 +96,7 @@ exports.levelresponse = function(client , message) {
       // Add the points to the enmap for this user.
       client.points.math(key, "+", pointsToAdd, "points");
   
-      message.channel.send(`${user.tag} has received ${pointsToAdd} points and now stands at ${client.points.get(key, "points")} points.`);
+      message.channel.send(`${user.tag} har fått ${pointsToAdd} poeng å har nu ${client.points.get(key, "points")} points.`);
     }
   
     if(command === "cleanup") {
@@ -116,7 +116,7 @@ exports.levelresponse = function(client , message) {
         client.points.delete(`${message.guild.id}-${data.user}`);
       });
   
-      message.channel.send(`I've cleaned up ${toRemove.size} old farts.`);
+      message.channel.send(`Æ har fjærna ${toRemove.size} ubrukelige brukera.`);
     }
 
 }
