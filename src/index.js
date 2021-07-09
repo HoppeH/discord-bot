@@ -16,17 +16,16 @@ client.points = new Enmap({ name: 'points' });
 
 client.on('ready', () => {
   console.log(
-    `Bot has started, with ${client.users.size} users, in ${
-      client.channels.size
-    } channels of ${client.guilds.size} guilds.`
+    `Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`
   );
 });
 
-client.on('message', message => {
+client.on('message', (message) => {
+  // console.log(message.member.user.id);
   //let args = message.content.split(' ').slice(1);
   //var argresult = args.join(' ');
 
-  level.levelresponse(client, message);
+  level.levelresponse(client, message).catch((err) => console.log(err));
 
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 

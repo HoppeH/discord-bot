@@ -61,3 +61,8 @@ config.json
 
 .vs
 auth.json
+
+data
+*.sqllite
+*.sqllite-shm
+*.sqllite-wal
