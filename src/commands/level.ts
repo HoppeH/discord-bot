@@ -1,10 +1,11 @@
-const config = require('./../config.json');
+import { config } from '../config'
+import { redisDB } from '../service';
+// const config = require('./../config.json');
 const fs = require('fs');
 const prefix = '!';
 const Discord = require('discord.js');
 // const client = require('../index.js');
-
-const levelsDb = require('./levelsDb');
+// const levelsDb = require('./levelsDb');
 
 const axios = require('axios');
 // const Enmap = require("enmap");
@@ -12,55 +13,9 @@ const axios = require('axios');
 
 const apiUrl = 'http://home.hoppeh.no:3333';
 
-exports.levelresponse = async function (client, message) {
-  // console.log(client.points);
-  if (message.guild) {
-    // We'll use the key often enough that simplifying it is worth the trouble.
-    const key = `${message.guild.id}-${message.author.id}`;
+export const levelresponse = async function (client, message) {
 
-    const userId = message.author.id;
-    const guildId = message.guild.id;
-    const username = message.author.username;
-
-    DTOuser = { userId, guildId, username };
-
-    // console.log(message.author.username);
-    levelsDb.incrementScore(userId, guildId, username);
-
-    // axios
-    //   .post(apiUrl + '/incrementscore', {
-    //     userId: message.author.id,
-    //     guildId: message.guild.id,
-    //     username: message.author.username,
-    //   })
-    //   .then((data) => console.log(`Response from Increment`))
-    //   .catch((err) => console.log(`Err from increment`, err));
-
-    // Triggers on new users we haven't seen before.
-    client.points.ensure(key, {
-      user: message.author.id,
-      guild: message.guild.id,
-      points: 0,
-      level: 1,
-      lastSeen: new Date(),
-    });
-
-    // Increment the points and save them.
-    client.points.inc(key, 'points');
-
-    // Calculate the user's current level
-    const curLevel = Math.floor(
-      0.1 * Math.sqrt(client.points.get(key, 'points'))
-    );
-
-    // Act upon level up by sending a message and updating the user's level in enmap.
-    if (client.points.get(key, 'level') < curLevel) {
-      message.reply(
-        `Du levla opp te level **${curLevel}**! Va ikje det flott ?`
-      );
-      client.points.set(key, curLevel, 'level');
-    }
-  }
+  if (!message.guild) return;
 
   // As usual, we stop processing if the message does not start with our prefix.
   if (message.content.indexOf(config.prefix) !== 0) return;
@@ -74,13 +29,11 @@ exports.levelresponse = async function (client, message) {
   if (command === 'points') {
     const key = `${message.guild.id}-${message.author.id}`;
 
-    levelsDb.getUser;
+    let { ...userData2 } = await redisDB.hgetall(key)
+
 
     return message.channel.send(
-      `Du har ${client.points.get(
-        key,
-        'points'
-      )} poeng, å e level ${client.points.get(key, 'level')}!`
+      `Du har ${userData2.points} poeng, å e level ${userData2.level}!`
     );
   }
 
@@ -187,11 +140,10 @@ exports.levelresponse = async function (client, message) {
 
     // We then filter it again (ok we could just do this one, but for clarity's sake...)
     // So we get only users that haven't been online for a month, or are no longer in the guild.
-    const rightNow = new Date();
+    const rightNow: Date = new Date();
     const toRemove = filtered.filter((data) => {
       return (
-        !message.guild.members.has(data.user) ||
-        rightNow - 2592000000 > data.lastSeen
+        !message.guild.members.has(data.user) || this.rightNow - 2592000000 > data.lastSeen
       );
     });
 

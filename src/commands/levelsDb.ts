@@ -1,9 +1,14 @@
+import { config } from './../config'
+
 const axios = require('axios');
 
-const apiUrl = 'http://home.hoppeh.no:3333';
+// const apiUrl = 'http://home.hoppeh.no:3333';
+
+
+
 exports.incrementScore = (userId, guildId, username) => {
   axios
-    .post(apiUrl + '/incrementscore', {
+    .post(config.apiUrl + '/incrementscore', {
       userId,
       guildId,
       username,
@@ -19,7 +24,7 @@ exports.incrementScore = (userId, guildId, username) => {
 exports.getUser = (userId, guildId, username) => {
   console.log(username);
   axios
-    .post(apiUrl + '/getuser', {
+    .post(config.apiUrl + '/getuser', {
       userId,
       guildId,
       username,

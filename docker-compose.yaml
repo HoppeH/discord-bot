@@ -1,4 +1,4 @@
-version: "3"
+version: '3.8'
 services:
   app:
     build:
@@ -6,6 +6,32 @@ services:
       context: .
     command: npm run start
     volumes:
-      - "./src:/usr/src/app/src"
-      - "./data:/usr/src/app/data"
+      - './src:/usr/src/app/src'
+      - './data:/usr/src/app/data'
     container_name: disc-bot
+    networks:
+      - backend
+  discord-redis:
+    # image: redis:6.0.9
+    # image: redislabs/redistimeseries:1.4.7
+    image: redislabs/rejson:latest
+    container_name: discord-redis
+    ports:
+      - 6380:6379
+    expose:
+      - '6380'
+
+    volumes:
+      # - ./data/redis:/var/lib/redis
+      - redis_discord_data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+        # - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    # entrypoint: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - backend
+volumes:
+  redis_discord_data:
+
+networks:
+  backend:
+    name: discord-backend

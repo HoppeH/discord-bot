@@ -1,18 +1,18 @@
 const axios = require('axios');
 const Discord = require('discord.js');
-const config = require('./../../config.json');
+import { config } from '../../config';
 
 const apiUrl = 'https://public-api.tracker.gg/apex/v1/standard/profile/5/';
 const apiEgil = 'http://localhost:3000/api/v01';
 
-exports.apexPlayer = function(message, args) {
+export const apexPlayer = function (message, args) {
   axios
     .get(apiUrl + '/' + args[1], {
       headers: {
         'TRN-API-KEY': config.apexApiToken
       }
     })
-    .then(function(response) {
+    .then(function (response) {
       let level = response.data.data.metadata.level;
       let username = response.data.data.metadata.platformUserHandle;
       let icon = response.data.data.children[0].metadata.icon;
@@ -61,7 +61,7 @@ exports.apexPlayer = function(message, args) {
       return message.channel.send(embed);
       // message.channel.send('Nivå: ' + response.data.metadata.level);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       if (error.response) {
         return message.channel.send(
           'Huffda! Jeg klarer ikke å finne stats om ``' + args[0] + '``'

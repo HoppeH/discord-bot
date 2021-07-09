@@ -1,9 +1,10 @@
-const config = require('./../../config.json');
+import { config } from '../../config';
 const axios = require('axios');
 const Discord = require('discord.js');
-const apexPlayer = require('./apex-player.js');
-const apexLeaderboard = require('./apex-leaderboard.js');
-exports.apexResponse = function(message) {
+import { apexPlayer } from './apex-player'
+import { apexLeaderboard } from './apex-leaderboard'
+
+export const apexResponse = function (message) {
   const apiUrl = 'https://public-api.tracker.gg/apex/v1/standard/profile/5/';
   const apiEgil = 'http://localhost:3000/api/v01';
 
@@ -13,25 +14,25 @@ exports.apexResponse = function(message) {
 
     switch (args[0]) {
       case 'player':
-        apexPlayer.apexPlayer(message, args);
+        apexPlayer(message, args);
         break;
 
       case 'lb':
         switch (args[1]) {
           case 'damage':
-            apexLeaderboard.apexLeaderboard(message, args);
+            apexLeaderboard(message, args);
             break;
 
           case 'level':
-            apexLeaderboard.apexLeaderboard(message, args);
+            apexLeaderboard(message, args);
             break;
 
           case 'headshots':
-            apexLeaderboard.apexLeaderboard(message, args);
+            apexLeaderboard(message, args);
             break;
 
           case 'kills':
-            apexLeaderboard.apexLeaderboard(message, args);
+            apexLeaderboard(message, args);
             break;
 
           case 'help':
@@ -64,3 +65,6 @@ exports.apexResponse = function(message) {
     }
   }
 };
+
+// export * from './apex-player'
+// export * from './apex-leaderboard'

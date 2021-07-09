@@ -2,12 +2,10 @@
   "name": "discord-bot",
   "version": "0.0.1",
   "description": "Aleks sin Discordbot",
-  "main": "index.js",
+  "main": "./src/index.ts",
   "scripts": {
     "test": "test",
-    "start": "nodemon ./src/index.js --ignore points.json -L",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "start": "nodemon --ignore points.json "
   },
   "repository": {
     "type": "git",
@@ -25,10 +23,12 @@
   "homepage": "https://github.com/HoppeH/discord-bot#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "better-sqlite-pool": "^0.2.0",
-    "discord.js": "^11.6.4",
-    "enmap": "^4.8.1",
-    "snyk": "^1.208.0"
+    "discord.js": "12.5.3",
+    "redis": "^3.1.2"
   },
-  "snyk": true
+  "devDependencies": {
+    "@types/redis": "^2.8.31",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5"
+  }
 }
