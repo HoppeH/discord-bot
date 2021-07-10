@@ -56,8 +56,7 @@ typings/
 
 # dotenv environment variables file
 .env
-config.ts
-config.json
+
 
 .vs
 auth.json
