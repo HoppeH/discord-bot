@@ -14,7 +14,7 @@ services:
   discord-redis:
     # image: redis:6.0.9
     # image: redislabs/redistimeseries:1.4.7
-    image: redislabs/rejson:latest
+    image: redislabs/redistimeseries:1.4.7
     container_name: discord-redis
     ports:
       - 6380:6379
@@ -24,7 +24,7 @@ services:
     volumes:
       # - ./data/redis:/var/lib/redis
       - redis_discord_data:/data
-      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./config/redis:/usr/local/etc/redis/redis.conf
         # - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     # entrypoint: redis-server /usr/local/etc/redis/redis.conf
     networks:
