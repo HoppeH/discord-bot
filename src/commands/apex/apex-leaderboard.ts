@@ -1,11 +1,11 @@
 const axios = require('axios');
 const Discord = require('discord.js');
-const config = require('./../../config.json');
+import { config } from '../../config';
 
 const apiUrl = 'https://public-api.tracker.gg/apex/v1/standard/profile/5/';
 const apiEgil = 'http://192.168.1.114:3000/api/v01';
 
-exports.apexLeaderboard = function(message, args) {
+export const apexLeaderboard = function (message, args) {
   console.log(apiEgil + '/leaderboard/' + args[1]);
   axios
     .get(apiEgil + '/leaderboard/' + args[1], {
@@ -13,7 +13,7 @@ exports.apexLeaderboard = function(message, args) {
       //   'TRN-API-KEY': config.apexApiToken
       // }
     })
-    .then(function(response) {
+    .then(function (response) {
       // console.log(response.data.data.records);
       const data = response.data.data.records;
       const embed = new Discord.RichEmbed()
@@ -32,7 +32,7 @@ exports.apexLeaderboard = function(message, args) {
       });
       return message.channel.send(embed);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       if (error.response) {
         return message.channel.send(
           'Huffda! Jeg klarer ikke å finne stats om ``' + args[0] + '``'
