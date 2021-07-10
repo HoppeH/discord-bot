@@ -76,7 +76,7 @@ export class DiscordBot {
 
         case 'setstatus':
         case 'setgame': {
-          setgameresponse(this.client, message);
+          setgameresponse(this.client, message, command, args);
           break;
         }
 
