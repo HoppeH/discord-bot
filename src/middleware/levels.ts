@@ -14,6 +14,9 @@ const axios = require('axios');
 const apiUrl = 'http://home.hoppeh.no:3333';
 
 export const levelManagement = async function (client, message) {
+
+  if (message.author.bot) return;
+
   // console.log(message.guild);
   if (message.guild) {
     // We'll use the key often enough that simplifying it is worth the trouble.
@@ -31,8 +34,6 @@ export const levelManagement = async function (client, message) {
         "points", 1,
         "level", 1,
         "lastSeen", new Date(),]
-
-
       redisDB._hmset(key, initialUser)
     }
 

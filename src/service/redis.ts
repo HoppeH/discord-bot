@@ -18,7 +18,7 @@ export class RedisService extends EventEmitter {
 
     constructor() {
         super();
-        this.client = redis.createClient({ host: 'discord-redis', port: 6379 });
+        this.client = redis.createClient({ host: 'discord-redis', port: 6380 });
         this._getXread = promisify(this.client.xread).bind(this.client);
         this._getKey = promisify(this.client.get).bind(this.client);
         this._setKey = promisify(this.client.set).bind(this.client);
@@ -87,7 +87,7 @@ export class RedisService extends EventEmitter {
         if (this.client !== null) {
             return this.client;
         } else {
-            return (this.client = redis.createClient({ host: 'redis' }));
+            return (this.client = redis.createClient({ host: 'redis', port: 6380 }));
         }
     }
 }
