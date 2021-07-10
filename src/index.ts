@@ -1,76 +1,102 @@
-const Discord = require('discord.js');
-const fs = require('fs');
+import * as Discord from 'discord.js';
+
+
+require('dotenv').config()
+// const fs = require('fs');
 
 import { redisDB } from './service';
-
-const client = new Discord.Client();
 import { config } from './config';
-const prefix = '!';
-let redisClient;
+
 import { warn, setgameresponse, pingResponse, apexResponse, levelresponse } from './commands';
 import { levelManagement } from './middleware/levels';
-// const setguild = require ("./commands/guildevents.js");
-
-// const Enmap = require('enmap');
-// client.points = new Enmap({ name: 'points' });
-
-client.on('ready', () => {
-  console.log(
-    // `Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`
-    `Bot has started ==>>`
-  );
-  redisClient = redisDB.getRedisClient();
-
-  // console.log(client.users);
-});
-
-client.on('message', (message) => {
-  // console.log(message.member.user.id);
-  // let args = message.content.split(' ').slice(1);
-  // const argresult = args.join(' ');
 
 
-  levelManagement(client, message).catch((err) => console.log(err));
 
-  if (!message.content.startsWith(config.prefix) || message.author.bot) return;
-  let args = message.content.split(' ');
+export class DiscordBot {
 
-  switch (args[0]) {
-    case '!ping': {
-      pingResponse(message);
-      break;
-    }
+  private client;
+  private redisClient;
+  constructor() {
 
-    case '!apex': {
-      apexResponse(message);
-      break;
-    }
-
-    case '!points': {
-      levelresponse(client, message);
-      break;
-    }
-
-    case '!setstatus':
-    case '!setgame': {
-      setgameresponse(client, message);
-      break;
-    }
-
-    default: {
-      message.channel.send(`Ikke gyldig kommando: ${args[0]}`);
-      break;
-    }
+    this.client = new Discord.Client();
+    this.init();
   }
 
-  // setguild.guildevents(client , message);
-});
-client.on('guildMemberAdd', (member) => {
-  let guild = member.guild;
-  guild.defaultChannel.send(`Velkommen ${member.user.username} Te servern`);
-});
+  init() {
+    this.client.on('ready', () => {
+      console.log(
+        // `Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`
+        `Bot has started ==>>`
+      );
+      this.redisClient = redisDB.getRedisClient();
 
-// Logge på / Starte opp boten
-client.login(config.token);
+      // console.log(client.users);
+    });
 
-// exports.client = client;
+    this.client.on('message', (message) => {
+      // console.log(message.author.bot)
+      // if () return;
+      levelManagement(this.client, message).catch((err) => console.log(err));
+
+
+      // console.log(message.member.user.id);
+      const prefix: string = message.content.slice(0, 1)
+
+
+      const allArgs = message.content.substring(1).split(' ');
+
+      // Setter kommand
+      const command = allArgs[0]
+
+
+      // Setter alle argumenter
+      const args = allArgs.slice(1);
+
+
+
+
+      if (prefix !== config.prefix) return;
+
+      switch (command) {
+        case 'ping': {
+          console.log('ping case')
+          pingResponse(message, command);
+          break;
+        }
+
+        case 'apex': {
+          apexResponse(message);
+          break;
+        }
+
+        case 'points': {
+          levelresponse(this.client, message);
+          break;
+        }
+
+        case 'setstatus':
+        case 'setgame': {
+          setgameresponse(this.client, message);
+          break;
+        }
+
+        default: {
+          message.channel.send(`Ikke gyldig kommando: ${args[0]}`);
+          break;
+        }
+      }
+
+      // setguild.guildevents(client , message);
+    });
+
+    this.client.on('guildMemberAdd', (member) => {
+      let guild = member.guild;
+      guild.defaultChannel.send(`Velkommen ${member.user.username} Te servern`);
+    });
+
+    // Logge på / Starte opp boten
+    this.client.login(config.token);
+  }
+  // exports.client = client;
+}
+export const Client = new DiscordBot();
