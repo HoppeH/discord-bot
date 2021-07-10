@@ -35,7 +35,7 @@ export const apexLeaderboard = function (message, args) {
     .catch(function (error) {
       if (error.response) {
         return message.channel.send(
-          'Huffda! Jeg klarer ikke å finne stats om ``' + args[0] + '``'
+          `Huffda! Jeg klarer ikke å finne stats om ${args[0]}`
         );
       } else if (error.request) {
         message.channel.send('Auda! Noe har gått galt! ' + error);

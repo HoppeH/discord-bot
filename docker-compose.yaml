@@ -17,16 +17,17 @@ services:
     image: redislabs/redistimeseries:1.4.7
     container_name: discord-redis
     ports:
-      - 6380:6379
+    - 6380:6380
     expose:
-      - '6380'
+    - '6380'
 
     volumes:
       # - ./data/redis:/var/lib/redis
       - redis_discord_data:/data
-      - ./config/redis:/usr/local/etc/redis/redis.conf
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
         # - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    # entrypoint: redis-server /usr/local/etc/redis/redis.conf
+    entrypoint: redis-server /usr/local/etc/redis/redis.conf
+    # entrypoint: redis-server 
     networks:
       - backend
 volumes:
@@ -34,4 +35,4 @@ volumes:
 
 networks:
   backend:
-    name: discord-backend
+    name: backend
