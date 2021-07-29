@@ -14,6 +14,17 @@ export class RedisService extends EventEmitter {
     public _hmget = null;
     public _hincrby = null;
     public hgetall = null;
+    public hscan = null;
+    public zrevrangebyscore = null;
+    public zadd = null;
+    public zrem = null;
+    public zrange = null;
+    public zrangebyscore = null;
+    public zcount = null;
+    public zrank = null;
+    public zscore = null;
+    public zincrby = null;
+    public zrevrange = null;
 
 
     constructor() {
@@ -26,7 +37,17 @@ export class RedisService extends EventEmitter {
         this._hmget = promisify(this.client.hget).bind(this.client);
         this._hincrby = promisify(this.client.hincrby).bind(this.client);
         this.hgetall = promisify(this.client.hgetall).bind(this.client);
-
+        this.hscan = promisify(this.client.hscan).bind(this.client);
+        this.zrevrangebyscore = promisify(this.client.zrevrangebyscore).bind(this.client);
+        this.zrangebyscore = promisify(this.client.zrangebyscore).bind(this.client);
+        this.zadd = promisify(this.client.zadd).bind(this.client);
+        this.zrem = promisify(this.client.zrem).bind(this.client);
+        this.zrange = promisify(this.client.zrange).bind(this.client);
+        this.zcount = promisify(this.client.zcount).bind(this.client);
+        this.zrank = promisify(this.client.zrank).bind(this.client);
+        this.zscore = promisify(this.client.zscore).bind(this.client);
+        this.zincrby = promisify(this.client.zincrby).bind(this.client);
+        this.zrevrange = promisify(this.client.zrevrange).bind(this.client);
 
 
 

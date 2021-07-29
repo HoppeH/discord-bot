@@ -26,21 +26,26 @@ export const levelManagement = async function (client, message) {
     // Get data from Redis for user.
     let { ...userData } = await redisDB.hgetall(key);
 
+    // console.log(message.author);
     // Check if user exist ing Redis DB / If not add user to database. 
     if (userData && Object.keys(userData).length === 0 && userData.constructor === Object) {
       const initialUser = [
         "user", message.author.id,
+        "userName", message.author.username,
         "guild", message.guild.id,
         "points", 1,
         "level", 1,
         "lastSeen", new Date(),]
-      redisDB._hmset(key, initialUser)
+      redisDB._hmset(key, initialUser);
+      redisDB.zadd([`leaderboard-${message.guild.id}`, 1, message.author.id]);
     }
 
     // Increment / update points and last seen in Redis DB
     redisDB.hincrby(key, "points", message.content.length);
+    redisDB.zincrby([`leaderboard-${message.guild.id}`, message.content.length, message.author.id])
     redisDB.hmset(key, ["lastSeen", new Date()])
     userData.points++
+
 
     // Calculate the user's current level
     const curLevel = Math.floor(

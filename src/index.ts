@@ -28,6 +28,7 @@ export class DiscordBot {
         // `Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`
         `Bot has started ==>>`
       );
+
       this.redisClient = redisDB.getRedisClient();
 
       // console.log(client.users);
@@ -68,7 +69,7 @@ export class DiscordBot {
           apexResponse(message);
           break;
         }
-
+        case 'leaderboard':
         case 'points': {
           levelresponse(this.client, message);
           break;
