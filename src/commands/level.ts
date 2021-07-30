@@ -41,128 +41,60 @@ export const levelresponse = async function (client, message) {
 
     let embedCosmos = new Discord.MessageEmbed()
       .setTitle('Leaderboard')
-      // .setAuthor('HoppeH')
-      .setDescription('Top 10 users!')
-      .setColor(0x00ae86)
-      .addField('test', 'test');
-
+      .setDescription('Top 10 users')
+      .setColor(0x00ae86);
+    let index = 1;
     for (let userId of top10) {
       const userData = await redisDB.hgetall(`${message.guild.id}-${userId}`)
       // message.channel.send(`Rank: ${index + 1} - ${data.userName} Level: ${data.level} Points: ${data.points}`)
-      console.log(userData);
       embedCosmos.addField(
-        `#1 - ${userData.userName}`,
+        `#${index} - ${userData.userName}`,
         `Level: ${userData.level} - Points: ${userData.points}`
       );
-
+      index++;
     }
-
-    console.log(embedCosmos);
-
-
     return message.channel.send(embedCosmos);
-
-
-
-
-    // console.log(top10);
-    // // Get a filtered list (for this guild only), and convert to an array while we're at it.
-    // const filtered = client.points
-    //   .array()
-    //   .filter((p) => p.guild === message.guild.id);
-
-    // // Sort it to get the top results... well... at the top. Y'know.
-    // const sorted = filtered.sort((a, b) => b.points - a.points);
-
-    // // Slice it, dice it, get the top 10 of it!
-    // const top10 = sorted.splice(0, 10);
-
-    // Now shake it and show it! (as a nice embed, too!)
-    // const embed = new Discord.RichEmbed()
-    //   .setTitle('Leaderboard')
-    //   .setAuthor(client.user.username, client.user.avatarURL)
-    //   .setDescription('Top 10 brukera!')
-    //   .setColor(0x00ae86);
-    // for (const data of top10) {
-    //   embed.addField(
-    //     client.users.get(data.user).tag,
-    //     `${ data.points } points(level ${ data.level })`
-    //   );
-    // }
-
-    // axios
-    //   .post(apiUrl + '/leaderboard', {
-    //     userId: message.author.id,
-    //     guildId: message.guild.id,
-    //     username: message.author.username,
-    //   })
-    //   .then((res) => {
-    //     console.log(`Response from leaderboard`);
-
-    // let embedCosmos = new Discord.MessageEmbed()
-    //   .setTitle('Leaderboard')
-    //   .setAuthor('HoppeH')
-    //   .setDescription('Top 10 brukera!')
-    //   .setColor(0x00ae86);
-
-    // for (let item of top10) {
-    //   // console.log(item.$1);
-    //   embedCosmos.addField(
-    //     item,
-    //     `${ item } points)`
-    //     // `${ item.$1.points } points(level ${ item.$1.level })`
-    //   );
-    // }
-    // console.log(embedCosmos);
-    // return message.channel.send({ embedCosmos });
-    //   })
-    //   .catch((err) => console.log(`Err from leaderboard`, err));
-
-    // Now shake it and show it! (as a nice embed, too!)
-
-    // console.log(embed);
-
-    // message.channel.send({ embedCosmos });
-
-
-
   }
 
 
-  // console.log(message.guild.ownerID);
   if (command === 'give') {
+
+
     // Limited to guild owner - adjust to your own preference!
-    if (message.author.id !== message.guild.ownerID)
+    // if (message.author.id !== message.guild.ownerID)
+    //   return message.reply('Du e ikje sjæf,du kan ikje gjøre sånn!');
+    // else
+    if (message.author.id !== message.guild.ownerID && !message.member.roles.cache.some(r => ["Admin"].includes(r.name)))
       return message.reply('Du e ikje sjæf,du kan ikje gjøre sånn!');
 
-    const user = message.mentions.users.first() || client.users.get(args[0]);
+    const user = message.mentions.users.first() || client.users.cache.get(args[0]);
     if (!user)
       return message.reply('Æ må vette kem æ ska gje poeng (Klient ID takk)!');
 
-    const pointsToAdd = parseInt(args[1], 10);
-    if (!pointsToAdd)
+    if (!args[1] || args[1]?.length === 0)
       return message.reply('Du sa ikje kor mange poeng æ sku gje...');
 
-    const key = `${message.guild.id} -${user.id} `;
+    const pointsToAdd: number = parseInt(args[1], 10);
 
-    // Ensure there is a points entry for this user.
-    client.points.ensure(key, {
-      user: message.author.id,
-      guild: message.guild.id,
-      points: 0,
-      level: 1,
-      lastSeen: new Date(),
-    });
+    if (pointsToAdd === 0)
+      return message.reply('Poenget med å gi 0 poeng... ?');
 
-    // Add the points to the enmap for this user.
-    client.points.math(key, '+', pointsToAdd, 'points');
+    if (typeof pointsToAdd != 'number' || Number.isNaN(pointsToAdd))
+      return message.reply('Feil datatype, poeng må angis i positive eller negativt tall. Feks -5')
+
+
+
+
+
+    const key = `${message.guild.id}-${user.id}`;
+
+    redisDB.hincrby(key, "points", pointsToAdd);
+    redisDB.zincrby([`leaderboard-${message.guild.id}`, pointsToAdd, user.id])
+
+
 
     message.channel.send(
-      `${user.tag} har fått ${pointsToAdd} poeng å har nu ${client.points.get(
-        key,
-        'points'
-      )
-      } points.`
+      `${user.username} har fått ${pointsToAdd} poeng`
     );
   }
 

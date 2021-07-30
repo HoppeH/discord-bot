@@ -69,6 +69,7 @@ export class DiscordBot {
           apexResponse(message);
           break;
         }
+        case 'give':
         case 'leaderboard':
         case 'points': {
           levelresponse(this.client, message);

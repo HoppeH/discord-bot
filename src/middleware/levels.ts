@@ -1,4 +1,5 @@
 import { config } from '../config'
+import { User } from '../interface';
 import { redisDB } from '../service';
 // const config = require('./../config.json');
 const fs = require('fs');
@@ -29,13 +30,13 @@ export const levelManagement = async function (client, message) {
     // console.log(message.author);
     // Check if user exist ing Redis DB / If not add user to database. 
     if (userData && Object.keys(userData).length === 0 && userData.constructor === Object) {
-      const initialUser = [
+      const initialUser: User[] = [
         "user", message.author.id,
         "userName", message.author.username,
         "guild", message.guild.id,
         "points", 1,
         "level", 1,
-        "lastSeen", new Date(),]
+        "lastSeen", new Date()]
       redisDB._hmset(key, initialUser);
       redisDB.zadd([`leaderboard-${message.guild.id}`, 1, message.author.id]);
     }
