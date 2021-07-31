@@ -69,6 +69,8 @@ export class DiscordBot {
           apexResponse(message);
           break;
         }
+
+        case 'cleanup':
         case 'give':
         case 'leaderboard':
         case 'points': {
