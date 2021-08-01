@@ -1,15 +1,6 @@
 import { config } from '../config'
 import { redisDB } from '../service';
-// const config = require('./../config.json');
-const fs = require('fs');
-const prefix = '!';
-const Discord = require('discord.js');
-// const client = require('../index.js');
-// const levelsDb = require('./levelsDb');
-
-const axios = require('axios');
-
-const apiUrl = 'http://home.hoppeh.no:3333';
+import { MessageEmbed } from 'discord.js';
 
 export const levelresponse = async function (client, message) {
 
@@ -21,6 +12,13 @@ export const levelresponse = async function (client, message) {
   // Also we use the config prefix to get our arguments and command:
   const args = message.content.split(/\s+/g);
   const command = args.shift().slice(config.prefix.length).toLowerCase();
+
+
+
+
+
+
+
 
   // Let's build some useful ones for our points system.
   const key = `${message.guild.id}-${message.author.id}`;
@@ -39,7 +37,7 @@ export const levelresponse = async function (client, message) {
 
     const top10 = await redisDB.zrevrange([`leaderboard-${message.guild.id}`, "0", "9"])
 
-    let embedCosmos = new Discord.MessageEmbed()
+    let embedCosmos = new MessageEmbed()
       .setTitle('Leaderboard')
       .setDescription('Top 10 users')
       .setColor(0x00ae86);
@@ -104,14 +102,12 @@ export const levelresponse = async function (client, message) {
     const users = await redisDB.zrevrange([`leaderboard-${message.guild.id}`, "0", "-1"])
     const rightNow: Date = new Date();
     // let initial_date = new Date;
-    // let added30Min = new Date(initial_date.getTime() - (24*60*60*1000));
+
 
 
     for (let userId of users) {
       const userData = await redisDB.hgetall(`${message.guild.id}-${userId}`)
-      // console.log(new Date(userData.lastSeen) instanceof Date);
-      // console.log(new Date(userData.lastSeen).getTime());
-      // console.log(rightNow.getTime() - 2592000000 > new Date(userData.lastSeen).getTime())
+
       if (rightNow.getTime() - 2592000000 > new Date(userData.lastSeen).getTime()) {
         message.channel.send(`Bruker Slettet: ${userData.userName} - ${userData.user}`);
         console.log(userData);
