@@ -1,22 +1,15 @@
 import * as Discord from 'discord.js';
-
-
 require('dotenv').config()
-// const fs = require('fs');
 
-import { redisDB } from './service';
 import { config } from './config';
-
-import { warn, setGameStatus, setStatus, pingResponse, apexResponse, userHandler } from './commands';
 import { levelManagement } from './middleware/levels';
-import { RedisClient } from 'redis';
-
+import { messageHandler } from './messageHandler';
 
 
 export class DiscordBot {
 
   private client;
-  private redisClient: RedisClient;
+  // private redisClient: RedisClient;
   constructor() {
 
     this.client = new Discord.Client();
@@ -30,74 +23,32 @@ export class DiscordBot {
         `Bot has started ==>>`
       );
 
-      this.redisClient = redisDB.getRedisClient();
+      // this.redisClient = redisDB.getRedisClient();
 
-      // console.log(client.users);
     });
 
     this.client.on('message', (message) => {
-      // console.log(message.author.bot)
-      // if () return;
+
+      if (!message.guild) return;
+
+      // Logg all messages beeing sendt to the server
       levelManagement(this.client, message).catch((err) => console.log(err));
 
-
-      // console.log(message.member.user.id);
+      // Split  prefix from the rest of the message
       const prefix: string = message.content.slice(0, 1)
 
-
+      // Get all arguments
       const allArgs = message.content.substring(1).split(' ');
 
-      // Setter kommand
-      // const command = allArgs[0]
-
-
       // Setter alle argumenter
-      // const args = allArgs.slice(1);
-
       const args = message.content.split(/\s+/g);
       const command = args.shift().slice(config.prefix.length).toLowerCase();
 
-
-
       if (prefix !== config.prefix) return;
 
-      switch (command) {
-        case 'ping': {
-          console.log('ping case')
-          pingResponse(message, command);
-          break;
-        }
+      messageHandler(this.client, message, command, args);
 
-        case 'apex': {
-          apexResponse(message);
-          break;
-        }
 
-        case 'cleanup':
-        case 'give':
-        case 'leaderboard':
-        case 'multi':
-        case 'points': {
-          userHandler(this.client, message, command, args);
-          break;
-        }
-
-        case 'setstatus': {
-          setGameStatus(this.client, message, command, args);
-          break;
-        }
-        case 'setgame': {
-          setStatus(this.client, message, command, args);
-          break;
-        }
-
-        default: {
-          message.channel.send(`Ikke gyldig kommando: ${args[0]}`);
-          break;
-        }
-      }
-
-      // setguild.guildevents(client , message);
     });
 
     this.client.on('guildMemberAdd', (member) => {
@@ -108,5 +59,8 @@ export class DiscordBot {
     // Logge på / Starte opp boten
     this.client.login(config.token);
   }
+
+
+
 }
 export const Client = new DiscordBot();

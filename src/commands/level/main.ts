@@ -5,34 +5,10 @@ import { give } from './give'
 import { leaderboard } from './leaderboard';
 import { points } from './points';
 
-// import { MessageEmbed } from 'discord.js';
-
-
-export const levelHandler = async function (client, message) {
-
-    if (!message.guild) return;
-
-    // As usual, we stop processing if the message does not start with our prefix.
-    if (message.content.indexOf(config.prefix) !== 0) return;
-
-    // Also we use the config prefix to get our arguments and command:
-    const args = message.content.split(/\s+/g);
-    const command = args.shift().slice(config.prefix.length).toLowerCase();
-
-    // Let's build some useful ones for our points system.
-    const key = `${message.guild.id}-${message.author.id}`;
-};
-
-
-
-
-
-
-
 
 export const userHandler = (client, message, command, args) => {
-    // console.log(data);
-    const xmlMessages: {} = {
+
+    const userMessages: {} = {
         'leaderboard': (): any => {
             return leaderboard(message);
         },
@@ -54,7 +30,7 @@ export const userHandler = (client, message, command, args) => {
         }
     };
 
-    return (xmlMessages[command] || xmlMessages['default'])();
+    return (userMessages[command] || userMessages['default'])();
 }
 
 export const removeUser = async (guildKey: string, userKey: string) => {
