@@ -1,4 +1,4 @@
-import { editPoints } from "./";
+import { editPoints } from "./main";
 
 export async function give(client, message, args) {
 

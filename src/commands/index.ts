@@ -1,7 +1,7 @@
 export * from './guildevents';
-export * from './level';
+export * from './level/main';
 export * from './ping';
-export * from './setgamesetstatus';
+export * from './setstatus';
 export * from './warn';
 export * from './apex';
 

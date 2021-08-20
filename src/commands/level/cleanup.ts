@@ -1,5 +1,5 @@
 import { redisDB } from '../../service';
-import { removeUser } from './';
+import { removeUser } from './main';
 
 export async function cleanup(message, args) {
 

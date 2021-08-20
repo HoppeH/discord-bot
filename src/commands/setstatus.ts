@@ -1,4 +1,4 @@
-import { config } from './../config'
+import { config } from '../config'
 
 export const setGame = (client, message, command, args) => {
   console.log('setgame', args);
