@@ -7,15 +7,16 @@ require('dotenv').config()
 import { redisDB } from './service';
 import { config } from './config';
 
-import { warn, setgameresponse, pingResponse, apexResponse, userHandler } from './commands';
+import { warn, setGameStatus, setStatus, pingResponse, apexResponse, userHandler } from './commands';
 import { levelManagement } from './middleware/levels';
+import { RedisClient } from 'redis';
 
 
 
 export class DiscordBot {
 
   private client;
-  private redisClient;
+  private redisClient: RedisClient;
   constructor() {
 
     this.client = new Discord.Client();
@@ -81,9 +82,12 @@ export class DiscordBot {
           break;
         }
 
-        case 'setstatus':
+        case 'setstatus': {
+          setGameStatus(this.client, message, command, args);
+          break;
+        }
         case 'setgame': {
-          setgameresponse(this.client, message, command, args);
+          setStatus(this.client, message, command, args);
           break;
         }
 
@@ -104,6 +108,5 @@ export class DiscordBot {
     // Logge på / Starte opp boten
     this.client.login(config.token);
   }
-  // exports.client = client;
 }
 export const Client = new DiscordBot();

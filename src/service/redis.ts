@@ -173,7 +173,7 @@ export class RedisService extends EventEmitter {
         );
 
     }
-    // public redisGetKey() { return this.client.getKey }
+
 
 
     public getRedisClient() {
