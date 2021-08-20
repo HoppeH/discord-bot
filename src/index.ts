@@ -7,7 +7,7 @@ require('dotenv').config()
 import { redisDB } from './service';
 import { config } from './config';
 
-import { warn, setgameresponse, pingResponse, apexResponse, levelresponse } from './commands';
+import { warn, setgameresponse, pingResponse, apexResponse, userHandler } from './commands';
 import { levelManagement } from './middleware/levels';
 
 
@@ -47,12 +47,14 @@ export class DiscordBot {
       const allArgs = message.content.substring(1).split(' ');
 
       // Setter kommand
-      const command = allArgs[0]
+      // const command = allArgs[0]
 
 
       // Setter alle argumenter
-      const args = allArgs.slice(1);
+      // const args = allArgs.slice(1);
 
+      const args = message.content.split(/\s+/g);
+      const command = args.shift().slice(config.prefix.length).toLowerCase();
 
 
 
@@ -73,8 +75,9 @@ export class DiscordBot {
         case 'cleanup':
         case 'give':
         case 'leaderboard':
+        case 'multi':
         case 'points': {
-          levelresponse(this.client, message);
+          userHandler(this.client, message, command, args);
           break;
         }
 

@@ -1,13 +1,15 @@
 import { EventEmitter } from 'events';
-import redis from 'redis';
+import { createClient, ClientOpts, RedisClient, add_command } from 'redis';
 const { promisify } = require('util');
 
 
 export class RedisService extends EventEmitter {
 
-    private client = null;
+    private clientOpts: ClientOpts = { host: 'discord-redis', port: 6380 };
+    private client: RedisClient = null;
 
-    public _getXread = null;
+    // public xread = null;
+    // public xadd = null;
     public _getKey = null;
     public _setKey = null;
     public _hmset = null;
@@ -27,19 +29,34 @@ export class RedisService extends EventEmitter {
     public zrevrange = null;
     public hdel = null;
     public del = null;
+    public multi = null;
+    public exec = null;
+    public watch = null;
+
+
+
 
     constructor() {
         super();
-        this.client = redis.createClient({ host: 'discord-redis', port: 6380 });
-        this._getXread = promisify(this.client.xread).bind(this.client);
+        this.client = createClient(this.clientOpts);
+
+        // Stream Commands
+        /* tslint:disable-next-line */
+
+        /* tslint:disable-next-line */
+        // this.xadd = promisify(this.client.xadd).bind(this.client);
         this._getKey = promisify(this.client.get).bind(this.client);
         this._setKey = promisify(this.client.set).bind(this.client);
+
+        // Hash Commands
         this._hmset = promisify(this.client.hset).bind(this.client);
         this._hmget = promisify(this.client.hget).bind(this.client);
         this._hincrby = promisify(this.client.hincrby).bind(this.client);
         this.hgetall = promisify(this.client.hgetall).bind(this.client);
         this.hscan = promisify(this.client.hscan).bind(this.client);
         this.hdel = promisify(this.client.hdel).bind(this.client);
+
+        // Sorted Set commands
         this.zrevrangebyscore = promisify(this.client.zrevrangebyscore).bind(this.client);
         this.zrangebyscore = promisify(this.client.zrangebyscore).bind(this.client);
         this.zadd = promisify(this.client.zadd).bind(this.client);
@@ -50,7 +67,10 @@ export class RedisService extends EventEmitter {
         this.zscore = promisify(this.client.zscore).bind(this.client);
         this.zincrby = promisify(this.client.zincrby).bind(this.client);
         this.zrevrange = promisify(this.client.zrevrange).bind(this.client);
-        this.del = promisify(this.client.del).bind(this.client);
+
+        this.multi = promisify(this.client.multi).bind(this.client);
+        // this.exec = promisify(this.client.exec).bind(this.client);
+        this.watch = promisify(this.client.watch).bind(this.client);
 
 
 
@@ -66,6 +86,55 @@ export class RedisService extends EventEmitter {
     }
 
 
+    public xread = function (returnCount: string = '10', blockingTime: string = '5000', streamKey: [string], id: [string] = ['$']) {
+        return new Promise((resolve, reject) => {
+            this.client.xread(
+                'COUNT',
+                returnCount,
+                'BLOCK',
+                blockingTime,
+                'STREAMS',
+                streamKey,
+                id,
+                (err, res) => {
+                    if (err) {
+                        console.log('Error: ', err);
+                        return reject(err)
+                    }
+                    console.log(res);
+                    return resolve(res)
+                }
+            );
+        })
+    };
+    public xadd = function (stream: string, key: string, value: string) {
+        return new Promise((resolve, reject) => {
+            this.client.xadd(stream, '*', key, value, function (
+                err,
+                res
+            ) {
+                if (err) {
+                    reject(err);
+                    console.log('Error: ', err);
+                }
+                return resolve(res);
+                // console.log('Stream Publisher: ', res);
+                // console.log('publish value: ' + value);
+            });
+        })
+    };
+
+    // const xread1 = function (block, stream, id) {
+    //     // if (streams.length === 0) {
+    //     //   throw 'streams required';
+    //     // }
+    //     let args = ['BLOCK', block, 'STREAMS', stream, '$'];
+
+    //     id = stream.id ? stream.id : '$';
+    //     // console.log(args);
+    //     return getXread('BLOCK', block, 'STREAMS', stream, id);
+    //     // return getXread('BLOCK', block, 'STREAMS', stream, '$');
+    // };
 
     public jsonSet(userID, data) {
         this.client.send_command(
@@ -104,14 +173,15 @@ export class RedisService extends EventEmitter {
         );
 
     }
-    public redisGetKey() { return this.client.getKey }
+    // public redisGetKey() { return this.client.getKey }
 
 
     public getRedisClient() {
         if (this.client !== null) {
             return this.client;
         } else {
-            return (this.client = redis.createClient({ host: 'redis', port: 6380 }));
+            createClient()
+            return (this.client = createClient(this.clientOpts));
         }
     }
 }

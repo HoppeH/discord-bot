@@ -45,6 +45,7 @@ export const levelManagement = async function (client, message) {
     redisDB.hincrby(key, "points", message.content.length);
     redisDB.zincrby([`leaderboard-${message.guild.id}`, message.content.length, message.author.id])
     redisDB.hmset(key, ["lastSeen", new Date()])
+    redisDB.xadd('testStreasm', message.author.id, `${message.content.length}`);
     userData.points++
 
 
@@ -52,14 +53,24 @@ export const levelManagement = async function (client, message) {
     const curLevel = Math.floor(
       0.1 * Math.sqrt(userData.points)
     );
+    const levelDiff = curLevel - userData.level
 
     // Act upon level up by sending a message and updating the user's level in enmap.
-    if (userData.level < curLevel) {
+    if (levelDiff > 0) {
       message.reply(
-        `Du levla opp te level **${curLevel}**! Va ikje det flott ?`
+        `Du levla har gått opp ${levelDiff} level og e nu level **${curLevel}**! Va ikje det flott ?`
       );
-      redisDB.hincrby(key, "level", 1);
+
+      redisDB.hincrby(key, "level", levelDiff);
       userData.level++
+    }
+    if (levelDiff < 0) {
+      message.reply(
+        `Haha du gikk ned ${levelDiff} nivå og e nu level **${curLevel}**! Va ikje det flott ?`
+      );
+
+      redisDB.hincrby(key, "level", levelDiff);
+      userData.level = userData.level - levelDiff
     }
   }
 
