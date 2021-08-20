@@ -2,7 +2,7 @@ import * as Discord from 'discord.js';
 require('dotenv').config()
 
 import { config } from './config';
-import { levelManagement } from './middleware/levels';
+import { levelManagement, guildEvents } from './middleware';
 import { messageHandler } from './messageHandler';
 
 
@@ -24,7 +24,7 @@ export class DiscordBot {
       );
 
       // this.redisClient = redisDB.getRedisClient();
-
+      guildEvents(this.client);
     });
 
     this.client.on('message', (message) => {
@@ -51,10 +51,10 @@ export class DiscordBot {
 
     });
 
-    this.client.on('guildMemberAdd', (member) => {
-      let guild = member.guild;
-      guild.defaultChannel.send(`Velkommen ${member.user.username} Te servern`);
-    });
+    // this.client.on('guildMemberAdd', (member) => {
+    //   let guild = member.guild;
+    //   guild.defaultChannel.send(`Velkommen ${member.user.username} Te servern`);
+    // });
 
     // Logge på / Starte opp boten
     this.client.login(config.token);

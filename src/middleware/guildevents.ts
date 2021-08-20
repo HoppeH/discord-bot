@@ -1,4 +1,4 @@
-export const guildevents = (client, message) => {
+export const guildEvents = (client) => {
     //guild
     client.on('guildMemberAdd', member => {
         console.log('guildMemberAdd');
